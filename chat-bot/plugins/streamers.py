@@ -19,7 +19,8 @@ class Platform:
 
 
 class Streamer:
-    def __init__(self, name, display_name, link, stream_id):
+    def __init__(self, game, name, display_name, link, stream_id):
+        self.game = game
         self.name = name
         self.display_name = display_name
         self.link = link
@@ -44,6 +45,7 @@ async def twitch_collector(streamers):
                 result = await resp.json()
                 for stream in result['streams']:
                     streamer = Streamer(
+                        stream['channel']['game']
                         stream['channel']['name'],
                         stream['channel']['display_name'],
                         stream['channel']['url'],
@@ -75,6 +77,7 @@ async def hitbox_collector(streamers):
                 for live in result['livestream']:
                     if live["media_is_live"] == "1":
                         streamer = Streamer(
+                            live["category_name"]
                             live["media_name"],
                             live["media_display_name"],
                             live["channel"]["channel_link"],
@@ -107,6 +110,7 @@ async def beam_collector(streamers):
                 async with session.get(url) as manifest:
                     manifest = await manifest.json()
                     streamer = Streamer(
+                        stream['typeId'],
                         stream['user']['username'].lower(),
                         stream['user']['username'],
                         "https://beam.pro/"+stream['user']['username'],
@@ -191,6 +195,9 @@ class Streamers(Plugin):
                         ).replace(
                             '{link}',
                             streamer.link
+                        ).replace(
+                            '{game}'
+                            streamer.game
                         )
                     )
                     await storage.sadd('check:'+streamer.link, streamer.stream_id)
