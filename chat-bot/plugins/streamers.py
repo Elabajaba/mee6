@@ -196,7 +196,7 @@ class Streamers(Plugin):
                             '{link}',
                             streamer.link
                         ).replace(
-                            '{game}'
+                            '{game}',
                             streamer.game
                         )
                     )
