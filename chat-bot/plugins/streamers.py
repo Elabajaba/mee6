@@ -45,7 +45,7 @@ async def twitch_collector(streamers):
                 result = await resp.json()
                 for stream in result['streams']:
                     streamer = Streamer(
-                        stream['channel']['game']
+                        stream['channel']['game'],
                         stream['channel']['name'],
                         stream['channel']['display_name'],
                         stream['channel']['url'],
@@ -77,7 +77,7 @@ async def hitbox_collector(streamers):
                 for live in result['livestream']:
                     if live["media_is_live"] == "1":
                         streamer = Streamer(
-                            live["category_name"]
+                            live["category_name"],
                             live["media_name"],
                             live["media_display_name"],
                             live["channel"]["channel_link"],
